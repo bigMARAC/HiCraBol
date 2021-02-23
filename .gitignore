@@ -2,4 +2,5 @@
 /src/config/db.js
 /src/tmp/uploads/*
 !/src/tmp/uploads/.gitkeep
-/.docker
+/.docker/dbdata/*
+!/.docker/dbdata/.gitkeep
