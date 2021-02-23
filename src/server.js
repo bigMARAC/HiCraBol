@@ -6,9 +6,9 @@ require('./database')
 
 const app = express()
 
+app.use(express.static(__dirname + '/tmp'))
 app.use(cors())
 app.use(express.json())
-app.use(express.static(__dirname + 'uplodas'))
 app.use(routes)
 
 app.listen(3351)

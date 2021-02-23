@@ -1,5 +1,5 @@
 /node_modules
 /src/config/db.js
-/src/uploads/*
-!/src/uploads/.gitkeep
+/src/tmp/uploads/*
+!/src/tmp/uploads/.gitkeep
 /.docker
