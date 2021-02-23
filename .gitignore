@@ -1,0 +1,5 @@
+/node_modules
+/src/config/db.js
+/src/uploads/*
+!/src/uploads/.gitkeep
+/.docker

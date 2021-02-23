@@ -1,0 +1,14 @@
+version: '3'
+
+services: 
+    example-mysql:
+        image: mysql:5.7.22
+        command: --innodb-use-native-aio=0
+        restart: always
+        ports: 
+            - "3051:3306"
+        volumes:
+            - "./.docker/dbdata:/var/lib/mysql"
+        environment: 
+            MYSQL_DATABASE: db_example
+            MYSQL_ROOT_PASSWORD: root
