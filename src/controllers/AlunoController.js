@@ -1,9 +1,12 @@
 const Aluno = require('./../models/Aluno')
 const bcrypt = require('bcrypt')
-const Sequelize = require('sequelize')
-const { json } = require('sequelize')
+const jwt = require('jsonwebtoken')
 
 module.exports = {
+    async read(req, res){
+        const alunos = await Aluno.findAll()
+        return res.json({ alunos })
+    },
     async create(req, res) {
         const { nome, matricula, senha } = req.body
         if (nome && matricula && senha) {
@@ -17,10 +20,16 @@ module.exports = {
                             const aluno = await Aluno.create({
                                 nome,
                                 matricula,
-                                senha: hash
+                                senha: hash,
+                                token: jwt.sign({ user: matricula }, 'Got a secret?', { expiresIn: 7200 })
                             })
 
-                            return res.status(200).json({ aluno })
+                            return res.status(200).json({
+                                id: aluno.id,
+                                nome: aluno.nome,
+                                matricula: aluno.matricula,
+                                token: aluno.token
+                            })
                         } catch (error) {
                             return res.status(400).json({ erro: error })
                         }
@@ -44,13 +53,17 @@ module.exports = {
                 where: { matricula }
             })
             if( aluno ) {
+                const token = jwt.sign({ user: aluno.matricula }, 'Got a secret?', { expiresIn: 7200 })
+                aluno.token = token,
+                await aluno.save()
                 bcrypt.compare(senha, aluno.senha, (err, result) => {
                     if(!err){
                         if(result){
                             return res.status(200).json({
                                 auth: true,
                                 matricula: aluno.matricula,
-                                nome: aluno.nome
+                                nome: aluno.nome,
+                                token: aluno.token
                             })
                         } else {
                             return res.status(401).json({
